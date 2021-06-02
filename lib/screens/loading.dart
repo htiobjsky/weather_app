@@ -11,11 +11,10 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-
   double latitude3;
   double longitude3;
 
-  void getLocation() async{
+  void getLocation() async {
     MyLocation myLocation = MyLocation();
     await myLocation.getMyCurrentLocation();
     latitude3 = myLocation.latitude2;
@@ -23,12 +22,19 @@ class _LoadingState extends State<Loading> {
     print(latitude3);
     print(longitude3);
 
-    Network network = Network("https://api.openweathermap.org/data/2.5/weather?lat=$latitude3&lon=$longitude3&appid=$apikey&units=metric");
+    Network network = Network(
+        "https://api.openweathermap.org/data/2.5/weather?lat=$latitude3&lon=$longitude3&appid=$apikey&units=metric",
+        "https://api.openweathermap.org/data/2.5/air_pollution?lat=$latitude3&lon=$longitude3&appid=$apikey");
 
     var weatherData = await network.getJsonData();
+    var airData = await network.getAirData();
     print(weatherData);
-    Navigator.push(context, MaterialPageRoute(builder: (context){
-      return WeatherScreen(parseWeatherData: weatherData,);
+    print(airData);
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return WeatherScreen(
+        parseWeatherData: weatherData,
+        parseAirPollution: airData,
+      );
     }));
   }
 
